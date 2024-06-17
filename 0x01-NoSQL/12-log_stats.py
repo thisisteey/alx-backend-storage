@@ -6,15 +6,15 @@ from pymongo import MongoClient
 def nginx_log_statistics(mongo_collection):
     """Gets and prints some stats about Nginx logs in MongoDB"""
     total_logs = mongo_collection.count_documents({})
-    print(f"{total_logs} logs")
+    print("{} logs".format(total_logs))
     print("Methods:")
-    methods = ["GET", "POST", "PUT", "PATCH", "DELETE"]
-    for method in methods:
+    http_methods = ["GET", "POST", "PUT", "PATCH", "DELETE"]
+    for method in http_methods:
         method_count = mongo_collection.count_documents({"method": method})
-        print(f"\tmethod {method}: {method_count}")
+        print("\tmethod {}: {}".format(method, method_count))
     status_route_count = mongo_collection.count_documents({"method": "GET",
                                                            "path": "/status"})
-    print(f"{status_route_count} status_check")
+    print("{} status_check".format(status_route_count))
 
 
 if __name__ == "__main__":
