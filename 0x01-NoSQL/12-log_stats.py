@@ -8,13 +8,13 @@ def nginx_log_statistics(mongo_collection):
     total_logs = mongo_collection.count_documents({})
     print(f"{total_logs} logs")
     print("Methods:")
-    http_methods = ["GET", "POST", "PUT", "PATCH", "DELETE"]
-    for method in http_methods:
+    methods = ["GET", "POST", "PUT", "PATCH", "DELETE"]
+    for method in methods:
         method_count = mongo_collection.count_documents({"method": method})
         print(f"\tmethod {method}: {method_count}")
-    count = mongo_collection.count_documents({"method": "GET",
-                                              "path": "/status"})
-    print(f"{count} status_check")
+    status_route_count = mongo_collection.count_documents({"method": "GET",
+                                                           "path": "/status"})
+    print(f"{status_route_count} status_check")
 
 
 if __name__ == "__main__":
