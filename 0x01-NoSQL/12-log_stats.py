@@ -5,16 +5,16 @@ from pymongo import MongoClient
 
 def nginx_log_statistics(nginx_collection):
     """Gets and prints some stats about Nginx logs in MongoDB"""
-    num_logs = nginx_collection.count_documents({})
-    print("{} logs".format(num_logs))
+    total_logs = nginx_collection.count_documents({})
+    print(f"{total_logs} logs")
     print("Methods:")
-    methods = ["GET", "POST", "PUT", "PATCH", "DELETE"]
-    for method in methods:
-        docs = nginx_collection.count_documents({"method": method})
-        print("\tmethod {}: {}".format(method, docs))
-    route = nginx_collection.count_documents({"method": "GET",
-                                              "path": "/status"})
-    print("{} status check".format(route))
+    http_methods = ["GET", "POST", "PUT", "PATCH", "DELETE"]
+    for method in http_methods:
+        method_count = nginx_collection.count_documents({"method": method})
+        print(f"\tmethod {method}: {method_count}")
+    status_route_count = nginx_collection.count_documents({"method": "GET",
+                                                           "path": "/status"})
+    print(f"{status_route_count} status check")
 
 
 if __name__ == "__main__":
