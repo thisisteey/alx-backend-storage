@@ -19,7 +19,6 @@ def cache_data(method: Callable) -> Callable:
         if cached_value_after:
             return cached_value_after.decode("utf-8")
         cached_value_before = method(url)
-        redisInst.set(f"count:{url}", 0)
         redisInst.setex(f"result:{url}", 10, cached_value_before)
         return cached_value_before
     return handler
