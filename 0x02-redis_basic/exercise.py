@@ -2,7 +2,19 @@
 """Module for using the NoSQL data storage Redis"""
 import redis
 import uuid
-from typing import Union, Callable
+from typing import Union, Callable, Any
+from functools import wraps
+
+
+def count_calls(method: Callable) -> Callable:
+    """Decorator that tracks the num of calls made to a method in the Cache"""
+    @wraps(method)
+    def handler(self, *args, **kwargs) -> Any:
+        """Increments call counter for the decorated method then invokes it"""
+        if isinstance(self._redis, redis.Redis):
+            self._redis.incr(method.__qualname__)
+        return method(self, *args, **kwargs)
+    return handler
 
 
 class Cache:
@@ -12,6 +24,7 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb(True)
 
+    @count_calls
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """Stores a value in the database and returns the generated key"""
         randomRedisKey = str(uuid.uuid4())
